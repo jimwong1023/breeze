@@ -18,4 +18,4 @@ u = User.find(1)
 c = Car.find(1)
 
 Transaction.create(user_id: u.id, car_id: c.id, ex_date: (Time.now + 10000), event_type: 'reserve')
-Transaction.create(user_id: u_id, car_id: c.id, ex_date: Time.now, event_type: 'occupy', close_date: Time.now )
+Transaction.create(user_id: u.id, car_id: c.id, ex_date: Time.now, event_type: 'occupy', close_date: Time.now )
