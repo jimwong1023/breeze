@@ -11,4 +11,9 @@ class CarsController < ApplicationController
     @member = @car.reserved_or_occupied_by
     @transactions = @car.transactions.order(created_at: :desc)
   end
+
+  def create
+    Car.create
+    redirect_to cars_path
+  end
 end
