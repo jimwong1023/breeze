@@ -1,15 +1,14 @@
 <%= flash[:notice] %>
 
-<% if current_user.car %>
+<% if current_user.car && !current_user.has_return? %>
   <%= form_for :transaction, :url => transactions_path do |f| %>
     <%= f.date_field :ex_date, placeholder: 'Return Date' %>
     <%= f.hidden_field :event_type, value: 'return' %>
     <%= f.hidden_field :car_id, value: current_user.car.id %>
-    <%= f.hidden_field :user_id, value: current_user.id %>
     <%= f.submit 'Return Vehicle' %>
   <% end %>
 <% elsif current_user.has_return? %>
-  <% curr_trans = current_user.has_return? %>
+  <% curr_trans = current_user.current_transaction %>
   <h2>Returning Car: <%= curr_trans.car_id %> | For Date: <%= curr_trans.ex_date %></h2>
 <% elsif current_user.has_reservation? %>
   <% curr_trans = current_user.current_transaction %>

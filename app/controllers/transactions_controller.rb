@@ -2,10 +2,10 @@ class TransactionsController < ApplicationController
   def create
     transaction = Transaction.new(transactions_params)
     if transaction.save
-      redirect_to user_path current_user
+      redirect_to cars_path
     else
       flash[:notice] = transaction.errors.full_messages
-      redirect_to user_path current_user
+      redirect_to cars_path
     end
   end
 

@@ -11,14 +11,25 @@ class Transaction < ActiveRecord::Base
       t.close_date = Time.now
       t.save
     end
+
+    #change to case
+    if instance.event_type == 'vacate'
+      instance.user_id = car.user_id
+    elsif instance.event_type == 'return'
+      instance.user_id = car.user_id
+    end
   }
 
   after_create {|instance|
     car = instance.car
     if instance.event_type == 'occupy'
+      instance.close_date = Time.now
+      instance.save!
       car.user = instance.user
       car.save!
     elsif instance.event_type == 'vacate'
+      instance.close_date = Time.now
+      instance.save!
       car.user = nil
       car.save!
     end

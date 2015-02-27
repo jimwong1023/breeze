@@ -20,6 +20,7 @@ class Car < ActiveRecord::Base
       return 'available'
     end
   end
+  
   #shares same methods as user.rb perhaps break into module to refactor
   def current_transaction
     self.transactions.where("close_date is NULL").first

@@ -1,18 +1,66 @@
+<%= flash[:notice] %>
+
 <h1>Car: <%= @car.id %></h1>
 <h4>Status: <%= @car.status %></h4>
 <h4>Member: <%= @member ? @member.id : "Available" %></h4>
 
+<% #Refactor into partials %>
 <h2>Actions</h2>
-  <% if @car.status == 'occupied' %>
-    <p>Return</p> 
-    <p>Vacate</p>
-  <% elsif @car.returning? %>
-    <p>Vacate</p>
-  <% elsif @car.status == 'available' %>
-    <p>Reserve</p> 
-    <p>Occupy</p>
-  <% elsif @car.reserved? %>
-    <p>Occupy</p>
+<% if @car.status == 'occupied' && !@car.returning? %>
+  <%= form_for :transaction, :url => transactions_path do |f| %>
+    <%= f.date_field :ex_date, placeholder: 'Return Date' %>
+    <%= f.hidden_field :event_type, value: 'return' %>
+    <%= f.hidden_field :car_id, value: @car.id %>
+    <%= f.submit 'Return Vehicle' %>
   <% end %>
+  <%= form_for :transaction, :url => transactions_path do |f| %>
+    <%= f.hidden_field :event_type, value: 'vacate' %>
+    <%= f.hidden_field :car_id, value: @car.id %>
+    <%= f.submit 'Vacate Vehicle' %>
+  <% end %>
+<% elsif @car.status == 'available' %>
+  <%= form_for :transaction, :url => transactions_path do |f| %>
+    <%= f.date_field :ex_date, placeholder: 'Return Date' %>
+    <%= f.hidden_field :event_type, value: 'reserve' %>
+    <%= f.hidden_field :car_id, value: @car.id %>
+    <%= f.text_field :user_id, placeholder: 'User Id' %>
+    <%= f.submit 'Reserve Vehicle' %>
+  <% end %>
+  <%= form_for :transaction, :url => transactions_path do |f| %>
+    <%= f.hidden_field :event_type, value: 'occupy' %>
+    <%= f.hidden_field :car_id, value: @car.id %>
+    <%= f.text_field :user_id, placeholder: 'User Id' %>
+    <%= f.submit 'Occupy Vehicle' %>
+  <% end %>
+<% elsif @car.returning? %>
+  <%= form_for :transaction, :url => transactions_path do |f| %>
+    <%= f.hidden_field :event_type, value: 'vacate' %>
+    <%= f.hidden_field :car_id, value: @car.id %>
+    <%= f.submit 'Vacate Vehicle' %>
+  <% end %>
+<% elsif @car.reserved? %>
+  <%= form_for :transaction, :url => transactions_path do |f| %>
+    <%= f.hidden_field :event_type, value: 'occupy' %>
+    <%= f.hidden_field :car_id, value: @car.id %>
+    <%= f.hidden_field :user_id, value: @car.current_transaction.user_id %>
+    <%= f.submit 'Occupy Vehicle' %>
+  <% end %>
+<% end %>
 
 <h2>History</h2>
+<table border = "1">
+  <tr>
+    <td>Type</td>
+    <td>Opened Date</td>
+    <td>User</td>
+    <td>Closed Date </td>
+  </tr>
+  <% @transactions.each do |t| %>
+    <tr>
+      <td><%= t.event_type %></td>
+      <td><%= t.created_at.to_date %></td>
+      <td><%= t.user_id %></td>
+      <td><%= t.close_date.to_date %></td>
+    </tr>
+  <% end %>
+</table>
