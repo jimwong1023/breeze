@@ -26,4 +26,14 @@ module Helper
 
     results.map {|hash| hash["id"]}
   end
+
+  #Should be a task that runs every hour/day to clean missed reservations
+  def scrub_transactions
+    #8 Hour grace period to pick up / return car before killing reservation / return
+    transactions = Transaction.where("ex_date < ? AND close_date is NULL", (Time.now + 8.hours))
+    transactions.each do |t|
+      t.close_date = Time.now
+      t.save
+    end
+  end
 end

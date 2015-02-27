@@ -20,13 +20,13 @@ class Car < ActiveRecord::Base
       return 'available'
     end
   end
-
+  #shares same methods as user.rb perhaps break into module to refactor
   def current_transaction
     self.transactions.where("close_date is NULL").first
   end
 
   def returning?
-    if self.transactions.where("event_type= ? AND close_date is NULL", 'return').length > 0
+    if self.transactions.where("event_type = ? AND close_date is NULL", 'return').length > 0
       return true
     end
     return false

@@ -8,8 +8,15 @@
     <%= f.hidden_field :user_id, value: current_user.id %>
     <%= f.submit 'Return Vehicle' %>
   <% end %>
+<% elsif current_user.has_return? %>
+  <% curr_trans = current_user.has_return? %>
+  <h2>Returning Car: <%= curr_trans.car_id %> | For Date: <%= curr_trans.ex_date %></h2>
+<% elsif current_user.has_reservation? %>
+  <% curr_trans = current_user.current_transaction %>
+  <h2>Reserved Car: <%= curr_trans.car_id %> | For Date: <%= curr_trans.ex_date %></h2>
 <% else %>
   <% if @available_car %>
+    <h2>Reserve Car: <%= @available_car.id %></h2>
     <%= form_for :transaction, :url => transactions_path do |f| %>
       <%= f.date_field :ex_date, placeholder: 'Reserve Date' %>
       <%= f.hidden_field :event_type, value: 'reserve' %>

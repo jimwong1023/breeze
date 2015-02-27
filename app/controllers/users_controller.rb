@@ -10,6 +10,7 @@ class UsersController < ApplicationController
   end
 
   def show
+    scrub_transactions
     if available_cars.first
       @available_car = Car.find_by_id(available_cars.first)
     end
