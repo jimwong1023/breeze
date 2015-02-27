@@ -1,0 +1,14 @@
+<table border = "1" style="width= 100%">
+  <tr>
+    <td>Car Id.</td>
+    <td>Status</td>
+    <td>Link</td>
+  </tr>
+  <% @cars.each do |car| %>
+    <tr>
+      <td><%= car.id %></td>
+      <td><%= car.status %></td>
+      <td><%= link_to "link", car %></td>
+    </tr>
+  <% end %>
+</table>

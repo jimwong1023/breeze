@@ -1,0 +1,23 @@
+<%= flash[:notice] %>
+
+<% if current_user.car %>
+  <%= form_for :transaction, :url => transactions_path do |f| %>
+    <%= f.date_field :ex_date, placeholder: 'Return Date' %>
+    <%= f.hidden_field :event_type, value: 'return' %>
+    <%= f.hidden_field :car_id, value: current_user.car.id %>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <%= f.submit 'Return Vehicle' %>
+  <% end %>
+<% else %>
+  <% if @available_car %>
+    <%= form_for :transaction, :url => transactions_path do |f| %>
+      <%= f.date_field :ex_date, placeholder: 'Reserve Date' %>
+      <%= f.hidden_field :event_type, value: 'reserve' %>
+      <%= f.hidden_field :car_id, value: @available_car.id %>
+      <%= f.hidden_field :user_id, value: current_user.id %>
+      <%= f.submit 'Reserve Vehicle' %>
+    <% end %>
+  <% else %>
+    There are no cars available to reserve!
+  <% end %>
+<% end %>

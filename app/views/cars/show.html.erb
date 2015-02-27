@@ -1,0 +1,18 @@
+<h1>Car: <%= @car.id %></h1>
+<h4>Status: <%= @car.status %></h4>
+<h4>Member: <%= @member ? @member.id : "Available" %></h4>
+
+<h2>Actions</h2>
+  <% if @car.status == 'occupied' %>
+    <p>Return</p> 
+    <p>Vacate</p>
+  <% elsif @car.returning? %>
+    <p>Vacate</p>
+  <% elsif @car.status == 'available' %>
+    <p>Reserve</p> 
+    <p>Occupy</p>
+  <% elsif @car.reserved? %>
+    <p>Occupy</p>
+  <% end %>
+
+<h2>History</h2>
