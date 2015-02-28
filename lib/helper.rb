@@ -17,7 +17,7 @@ module Helper
 
   def unavailable_cars
     results = ActiveRecord::Base.connection.select_all <<-SQL
-      SELECT c.id
+      SELECT DISTINCT c.id
         FROM cars AS c, transactions as t
         WHERE t.car_id = c.id
         AND t.close_date IS NULL
@@ -27,7 +27,7 @@ module Helper
     results.map {|hash| hash["id"]}
   end
 
-  #Should be a task that runs every hour/day to clean missed reservations
+  #Should be a task that runs every hour/day to clean missed reservations or returns
   def scrub_transactions
     #8 Hour grace period to pick up / return car before killing reservation / return
     transactions = Transaction.where("ex_date < ? AND close_date is NULL", (Time.now + 8.hours))
