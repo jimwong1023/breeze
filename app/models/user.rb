@@ -20,4 +20,18 @@ class User < ActiveRecord::Base
   def current_transaction
     self.transactions.where("close_date is NULL").first
   end
+
+  def status
+    if t = self.current_transaction
+      if t.event_type == "return"
+        return "Returning"
+      elsif t.event_type == "reserve"
+        return "Reserving"
+      end
+    elsif self.car
+      return "Occupying"
+    else
+      return "No Car"
+    end
+  end
 end

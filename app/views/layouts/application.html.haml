@@ -1,0 +1,23 @@
+%html
+%head
+  %title 
+    Breeze
+  = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+  = javascript_include_tag 'application', 'data-turbolinks-track' => true
+  = csrf_meta_tags
+
+%body{style: "background: url(#{asset_path 'field.jpg'}) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"}
+  %div{style: "height: 100%; width: 100%; position: fixed; top: 0, left: 0; background-color: rgba(0,0,0,0.40); color: #e7eaed; z-index: -1000;"}
+  %nav.navbar.navbar-default{style: "margin-bottom: 0;"}
+    .navbar-header
+      %a.navbar-brand{href: "/", style: "font-size: 25px; font-weight: bold; color: black;"}
+        JW-Breeze
+    .navbar{style: "margin-bottom: 0; margin-left: 20%;"}
+      %ul.nav.navbar-nav{style: "color: black; font-weight: bold;"}
+        %li
+          %a{href: "/users"}
+            Users
+        %li
+          %a{href: "/cars"}
+            Cars
+  = yield

@@ -1,0 +1,44 @@
+= flash[:notice]
+
+%h1= "Hello #{@user.id}"
+- if @user.car
+  %h2= "You are currently occupying Car #{@user.car.id}"
+
+- if @user.car && !@user.has_return?
+  = form_for :transaction, :url => transactions_path do |f|
+    = f.date_field :ex_date, placeholder: 'Return Date'
+    = f.hidden_field :event_type, value: 'return'
+    = f.hidden_field :car_id, value: @user.car.id
+    = f.submit 'Return Vehicle'
+- elsif @user.has_return?
+  - curr_trans = @user.current_transaction
+  %h2= "Returning Car: #{curr_trans.car_id} | For Date: #{curr_trans.ex_date}"
+- elsif @user.has_reservation?
+  - curr_trans = @user.current_transaction
+  %h2= "Reserved Car: #{curr_trans.car_id} | For Date: #{curr_trans.ex_date}"
+- else
+  - if @available_car
+    %h2= "Reserve Car: #{@available_car.id}"
+    = form_for :transaction, :url => transactions_path do |f|
+      = f.date_field :ex_date, placeholder: 'Reserve Date'
+      = f.hidden_field :event_type, value: 'reserve'
+      = f.hidden_field :car_id, value: @available_car.id
+      = f.hidden_field :user_id, value: @user.id
+      = f.submit 'Reserve Vehicle'
+  - else
+    %p There are no cars available to reserve!
+
+%h2
+  History
+%table{border: "1"}
+  %tr
+    %td Type
+    %td Opened Date
+    %td Car
+    %td Closed Date 
+  - @transactions.each do |t|
+    %tr
+      %td= t.event_type
+      %td= t.created_at.to_date
+      %td= t.car_id
+      %td= t.close_date.try(:to_date) || "NA"

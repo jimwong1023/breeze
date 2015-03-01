@@ -1,0 +1,16 @@
+.container.j-m-t-large.j-m-b-large{style: "background-color: white; border-radius: 5px;"}
+  = flash[:notice]
+  %h1.j-tc.j-m-b-medium
+    All Users Status
+  - @users.each do |user|
+    %div{style: "border: 1px solid; border-color: DarkGray; width: 220px; border-radius: 4px; padding: 14px; display: inline-block; vertical-align: middle; margin-bottom: 8px;"}
+      %a{style: "height: 192px; width: 192px; background-image: url(#{asset_path 'user.png'}); background-size: cover; display: block; background-color: LightGray;", href: "#{user_path user}"}
+      %div.j-tc{style: "font-size: 18px;"}
+        %p{style: "font-weight: bold;"}
+          ="User: #{user.id}"
+        %p
+          = "#{user.status} #{user.car ? "Car #{user.car.id}" : user.current_transaction ? "Car #{user.current_transaction.car_id}" : ''}"
+  .container.j-tc.j-m-t-large.j-m-b-xlarge
+    = form_for :user, :url => users_path do |f|
+      = f.button 'Create New User', :class => 'j-button-xlarge'
+

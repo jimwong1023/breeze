@@ -1,0 +1,17 @@
+.container.j-m-t-large.j-m-b-large{style: "background-color: white; border-radius: 5px;"}
+  = flash[:notice]
+  %h1.j-tc.j-m-b-medium
+    All Cars Status
+  - @cars.each do |car|
+    %div{style: "border: 1px solid; border-color: DarkGray; width: 220px; border-radius: 4px; padding: 14px; display: inline-block; vertical-align: middle; margin-bottom: 8px;"}
+      %a{style: "height: 192px; width: 192px; background-image: url(#{asset_path 'prius-sq.jpg'}); background-size: cover; display: block; background-color: LightGray;", href: "#{car_path car}"}
+      %div.j-tc{style: "font-size: 18px;"}
+        %p{style: "font-weight: bold;"}
+          ="Car: #{car.id}"
+        %p
+          = car.status
+        %p
+          ="User: #{car.user_id ? car.user_id : car.reserved? ? car.reserved_or_occupied_by.try(:id) : "NA"}"
+  .container.j-tc.j-m-t-large.j-m-b-xlarge
+    = form_for :car, :url => cars_path do |f|
+      = f.button 'Buy New Car', :class => 'j-button-xlarge'

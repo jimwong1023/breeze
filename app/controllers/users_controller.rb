@@ -10,6 +10,7 @@ class UsersController < ApplicationController
     if available_cars.first
       @available_car = Car.find_by_id(available_cars.first)
     end
+    @transactions = @user.transactions.order(created_at: :desc)
   end
 
   def index
