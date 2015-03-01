@@ -30,6 +30,14 @@
     margin-bottom: 35px;
   }
 
+  .j-p-b-medium {
+    padding-bottom: 25px;
+  }
+
+  .j-p-medium {
+    padding: 25px;
+  }
+
   .j-tc {
     text-align: center;
   }
@@ -38,9 +46,39 @@
     border-radius: 10px;
     border: 3px solid LightGray;
     color: #fff;
-    background-color: #5cbcf6;
+    background-color: #2f4f4f;
     width: 400px;
     height: 50px;
     font-size: 25px;
     font-weight: bold;
+  }
+
+  .j-fw-bold {
+    font-weight: bold;
+  }
+
+  .j-fs-large {
+    font-size: 20px;
+  }
+
+  .j-bg-white {
+    background-color: white;
+  }
+
+  .j-bg-light {
+    background-color: LightGray;
+  }
+
+  .j-b-b {
+    border: 3px solid LightGray;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+  }
+
+  .j-b-r {
+    border: 3px solid LightGray;
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 0;
   }

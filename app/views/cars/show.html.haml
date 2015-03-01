@@ -1,60 +1,71 @@
-= flash[:notice]
+.container.j-m-t-large.j-m-b-large.j-p-medium{style: "background-color: white; border-radius: 5px;"}
+  = flash[:notice]
+  %h1.j-tc.j-p-b-medium.j-b-b{style: "color: #2f4f4f;"}
+    = "Car: #{@car.id}"
+  .col-md-4.j-b-r.j-tc.j-p-medium
+    %img{src: "#{asset_path 'prius-sq.jpg'}", style: "width: 200px; border-radius: 10px;"}
+    %h4= "Status: #{@car.status}"
+    %h4= "User: #{@user ? @user.id : 'NA'}"
+    - if @car.status == 'occupied' && !@car.returning?
+      = form_for :transaction, :url => transactions_path do |f|
+        = f.date_field :ex_date, placeholder: 'Return Date'
+        = f.hidden_field :event_type, value: 'return'
+        = f.hidden_field :car_id, value: @car.id
+        = f.submit 'Return Vehicle'
 
-%h1= "Car: #{@car.id}"
-%h4= "Status: #{@car.status}"
-%h4= "Member: #{@member ? @member.id : 'Available'}"
+      = form_for :transaction, :url => transactions_path do |f|
+        = f.hidden_field :event_type, value: 'vacate'
+        = f.hidden_field :car_id, value: @car.id
+        = f.submit 'Vacate Vehicle'
 
-- #Refactor into partials
-%h2 Actions
-- if @car.status == 'occupied' && !@car.returning?
-  = form_for :transaction, :url => transactions_path do |f|
-    = f.date_field :ex_date, placeholder: 'Return Date'
-    = f.hidden_field :event_type, value: 'return'
-    = f.hidden_field :car_id, value: @car.id
-    = f.submit 'Return Vehicle'
+    - elsif @car.status == 'available' 
+      = form_for :transaction, :url => transactions_path do |f| 
+        = f.date_field :ex_date, placeholder: 'Return Date' 
+        = f.hidden_field :event_type, value: 'reserve' 
+        = f.hidden_field :car_id, value: @car.id 
+        = f.text_field :user_id, placeholder: 'User Id' 
+        = f.submit 'Reserve Vehicle' 
 
-  = form_for :transaction, :url => transactions_path do |f|
-    = f.hidden_field :event_type, value: 'vacate'
-    = f.hidden_field :car_id, value: @car.id
-    = f.submit 'Vacate Vehicle'
+      = form_for :transaction, :url => transactions_path do |f|
+        = f.hidden_field :event_type, value: 'occupy'
+        = f.hidden_field :car_id, value: @car.id
+        = f.text_field :user_id, placeholder: 'User Id'
+        = f.submit 'Occupy Vehicle'
 
-- elsif @car.status == 'available' 
-  = form_for :transaction, :url => transactions_path do |f| 
-    = f.date_field :ex_date, placeholder: 'Return Date' 
-    = f.hidden_field :event_type, value: 'reserve' 
-    = f.hidden_field :car_id, value: @car.id 
-    = f.text_field :user_id, placeholder: 'User Id' 
-    = f.submit 'Reserve Vehicle' 
+    - elsif @car.returning?
+      = form_for :transaction, :url => transactions_path do |f|
+        = f.hidden_field :event_type, value: 'vacate'
+        = f.hidden_field :car_id, value: @car.id
+        = f.submit 'Vacate Vehicle'
 
-  = form_for :transaction, :url => transactions_path do |f|
-    = f.hidden_field :event_type, value: 'occupy'
-    = f.hidden_field :car_id, value: @car.id
-    = f.text_field :user_id, placeholder: 'User Id'
-    = f.submit 'Occupy Vehicle'
+    - elsif @car.reserved?
+      = form_for :transaction, :url => transactions_path do |f| 
+        = f.hidden_field :event_type, value: 'occupy' 
+        = f.hidden_field :car_id, value: @car.id 
+        = f.hidden_field :user_id, value: @car.current_transaction.user_id 
+        = f.submit 'Occupy Vehicle' 
 
-- elsif @car.returning?
-  = form_for :transaction, :url => transactions_path do |f|
-    = f.hidden_field :event_type, value: 'vacate'
-    = f.hidden_field :car_id, value: @car.id
-    = f.submit 'Vacate Vehicle'
-
-- elsif @car.reserved?
-  = form_for :transaction, :url => transactions_path do |f| 
-    = f.hidden_field :event_type, value: 'occupy' 
-    = f.hidden_field :car_id, value: @car.id 
-    = f.hidden_field :user_id, value: @car.current_transaction.user_id 
-    = f.submit 'Occupy Vehicle' 
-
-%h2 History
-%table{border: "1"}
-  %tr
-    %td Type
-    %td Opened Date
-    %td User
-    %td Closed Date 
-  - @transactions.each do |t| 
-    %tr
-      %td= t.event_type
-      %td= t.created_at.to_date
-      %td= t.user_id || "NA"
-      %td= t.close_date.try(:to_date) || "NA"
+  .col-md-8
+    %h2{style: "text-align: center; color: #2f4f4f;"}
+      Transaction History
+    %div
+      %div.j-fw-bold.j-fs-large.j-tc
+        .col-md-3
+          Type
+        .col-md-3
+          Opened Date
+        .col-md-3
+          User
+        .col-md-3
+          Closed Date
+      - @transactions.each_with_index do |t, i|
+        %div.j-tc
+          - color = "#{i.even? ? "j-bg-light" : "j-bg-white"}"
+          .col-md-3{class: color}
+            = t.event_type
+          .col-md-3{class: color}
+            = t.created_at.to_date
+          .col-md-3{class: color}
+            = t.user_id || 'NA'
+          .col-md-3{class: color}
+            = t.close_date.try(:to_date) || "NA"
