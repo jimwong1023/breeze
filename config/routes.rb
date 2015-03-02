@@ -4,5 +4,6 @@ Rails.application.routes.draw do
   resources :users, only: [:create, :show, :index]
   resources :transactions, only: [:create]
   resources :cars, only: [:index, :show, :create]
+  post '/', to: 'homepage#home'
   get 'signout', to: 'sessions#destroy', as: 'signout'
 end
