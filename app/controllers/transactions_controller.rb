@@ -6,6 +6,10 @@ class TransactionsController < ApplicationController
       car = Car.find_by_id(params[:transaction][:car_id])
     else
       car = Car.find_by_id(available_cars.first)
+      if car.nil?
+        #Buy car if none available
+        car = Car.create
+      end
     end
 
     transaction.car = car

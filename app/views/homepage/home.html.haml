@@ -13,10 +13,10 @@
     .col-md-6
       %h4
         Available Car(s)
-      = form_tag({controller: "homepage", action: "home"}, method: "post") do
-        = label_tag(:q, "Date")
-        = date_field_tag "available[search_date]"
-        = submit_tag("Search")
-      - if @available
-        %h4
-          ="#{pluralize(@available, 'car')} available"
+      -# = form_tag({controller: "homepage", action: "home"}, method: "post") do
+        -# = label_tag(:q, "Date")
+        -# = date_field_tag "available[search_date]"
+        -# = submit_tag("Search")
+      -# - if @available
+        -# %h4
+          -# ="#{pluralize(@available, 'car')} available"

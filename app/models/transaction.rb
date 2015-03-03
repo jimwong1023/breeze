@@ -18,7 +18,9 @@ class Transaction < ActiveRecord::Base
   end
 
   def future_reserve_date
-    if !id && (reserve_date.to_date < Time.now.utc.to_date)
+    if reserve_date.nil?
+      errors.add(:transaction, "reserve date cannot be blank")
+    elsif !id && (reserve_date.to_date < Time.now.utc.to_date)
       errors.add(:transaction, "cannot have reserve date after today.")
     end
   end
