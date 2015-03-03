@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20150226060307) do
 
   create_table "cars", force: :cascade do |t|
     t.integer  "user_id"
+    t.integer  "current_transaction_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -25,14 +26,18 @@ ActiveRecord::Schema.define(version: 20150226060307) do
   create_table "transactions", force: :cascade do |t|
     t.integer  "car_id"
     t.integer  "user_id"
-    t.string   "event_type"
-    t.datetime "ex_date"
-    t.datetime "close_date"
+    t.date     "reserve_date"
+    t.date     "occupy_date"
+    t.date     "return_date"
+    t.date     "vacate_date"
+    t.integer  "current_user"
+    t.integer  "current_car"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "users", force: :cascade do |t|
+    t.integer  "current_transaction_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -11,7 +11,7 @@
         %p
           = car.status
         %p
-          ="User: #{car.user_id ? car.user_id : car.reserved? ? car.reserved_or_occupied_by.try(:id) : "NA"}"
+          ="User: #{car.user_id ? car.user_id : "NA"}"
   .container.j-tc.j-m-t-large.j-m-b-xlarge
     = form_for :car, :url => cars_path do |f|
       = f.button 'Buy New Car', :class => 'j-button-xlarge'

@@ -3,9 +3,12 @@ class CreateTransactions < ActiveRecord::Migration
     create_table :transactions do |t|
       t.belongs_to :car
       t.belongs_to :user
-      t.string :event_type
-      t.datetime :ex_date
-      t.datetime :close_date
+      t.date :reserve_date
+      t.date :occupy_date
+      t.date :return_date
+      t.date :vacate_date
+      t.integer :current_user
+      t.integer :current_car
 
       t.timestamps
     end

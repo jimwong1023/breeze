@@ -5,52 +5,67 @@
 
   .col-md-4.j-b-r.j-tc.j-p-medium
     %img{src: "#{asset_path 'user.png'}", style: "width: 200px; border-radius: 10px"}
-    - if @user.car
+    - if @user.has_reservation?
+      - curr_trans = @user.current_transaction
+      %h4= "Reserved Car: #{curr_trans.car_id} | For Date: #{curr_trans.reserve_date.to_date}"
+      = form_for curr_trans do |f|
+        = f.hidden_field :id, value: curr_trans.id
+        = f.hidden_field :action, value: "occupy"
+        = f.submit 'Occupy Vehicle'
+    - elsif @user.occupying?
+      - curr_trans = @user.current_transaction
       %h4= "Status: Occupying car ##{@user.car.id}"
-    - if @user.car && !@user.has_return?
-      = form_for :transaction, :url => transactions_path do |f|
-        = f.date_field :ex_date, placeholder: 'Return Date'
-        = f.hidden_field :event_type, value: 'return'
-        = f.hidden_field :car_id, value: @user.car.id
+      = form_for curr_trans do |f|
+        = f.hidden_field :id, value: curr_trans.id
+        = f.hidden_field :action, value: "return"
+        = f.date_field :return_date, placeholder: 'Return Date'
         = f.submit 'Return Vehicle'
+      = form_for curr_trans do |f|
+        = f.hidden_field :id, value: curr_trans.id
+        = f.hidden_field :action, value: "vacate"
+        = f.submit 'Vacate Vehicle'
     - elsif @user.has_return?
       - curr_trans = @user.current_transaction
-      %h4= "Returning Car: #{curr_trans.car_id} | For Date: #{curr_trans.ex_date.to_date}"
-    - elsif @user.has_reservation?
-      - curr_trans = @user.current_transaction
-      %h4= "Reserved Car: #{curr_trans.car_id} | For Date: #{curr_trans.ex_date}"
+      %h4= "Returning Car: #{curr_trans.car_id} | For Date: #{curr_trans.return_date.to_date}"
+      = form_for curr_trans do |f|
+        = f.hidden_field :id, value: curr_trans.id
+        = f.hidden_field :action, value: "vacate"
+        = f.submit 'Vacate Vehicle'
     - else
-      - if @available_car
-        %h4= "Reserve Car: #{@available_car.id}"
-        = form_for :transaction, :url => transactions_path do |f|
-          = f.date_field :ex_date, placeholder: 'Reserve Date'
-          = f.hidden_field :event_type, value: 'reserve'
-          = f.hidden_field :car_id, value: @available_car.id
-          = f.hidden_field :user_id, value: @user.id
-          = f.submit 'Reserve Vehicle'
-      - else
-        %h4 There are no cars available to reserve!
+      %h4= "Reserve Car"
+      = form_for :transaction, :url => transactions_path do |f|
+        = f.date_field :reserve_date, placeholder: 'Reserve Date'
+        = f.hidden_field :user_id, value: @user.id
+        = f.submit 'Reserve Vehicle'
   .col-md-8
     %h2{style: "text-align: center; color: #2f4f4f;"}
       Transaction History
-    %div
-      %div.j-fw-bold.j-fs-large.j-tc
-        .col-md-3
-          Type
-        .col-md-3
-          Opened Date
-        .col-md-3
-          Car
-        .col-md-3
-          Closed Date
+    .j-m-l-medium
+      .row.j-fw-bold.j-fs-large.j-tc
+        .col-md-2
+          T. ID
+        .col-md-2
+          Car ID
+        .col-md-2
+          Reserved
+        .col-md-2
+          Occupied
+        .col-md-2
+          Returned
+        .col-md-2
+          Vacated
       - @transactions.each_with_index do |t, i|
-        %div.j-tc
-          - color = "#{i.even? ? "j-bg-light" : "j-bg-white"}"
-          .col-md-3{class: color}
-            = t.event_type
-          .col-md-3{class: color}
-            = t.created_at.to_date
-          .col-md-3{class: color}
-            = t.car_id
-          .col-md-3{class: color}
-            = t.close_date.try(:to_date) || "NA"
+        - color = "#{i.even? ? "j-bg-light" : "j-bg-white"}"
+        .row.j-tc{class: color}
+          .col-md-2
+            =t.id
+          .col-md-2
+            =t.car_id
+          .col-md-2
+            =t.reserve_date
+          .col-md-2 
+            =t.occupy_date
+          .col-md-2
+            =t.return_date
+          .col-md-2
+            =t.vacate_date

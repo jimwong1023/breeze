@@ -3,5 +3,4 @@
 TODO:
 - Validation for user only having one car
 - Validation for user only having one reservation or return
-- UTC Time conflicts + 00:00 Time for date selection
 - Return Validation: Return date cannot be less than today
